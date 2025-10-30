@@ -9,34 +9,13 @@ Revisited Baeldung Tutorial CRUD Application with React and Spring Boot — see 
 
 The original article is ~4 years old and mixes libraries whose majors changed since.
 
-The versions which actually worked without changing the code, where:
+Also I migrated the initial tutorial to the Vite starter [Template Vitamin 2.0](https://github.com/wtchnm/Vitamin), which uses:
 
-- **React**: `18.3.1
-- **react-dom**: `18.3.1`
-- **react-router-dom**: `5.3.4` (v5 API used in the tutorial)
-- **reactstrap**: `^9` (required for Bootstrap 5)
-- **bootstrap**: `^5` (CSS only; load in `index.js`)
-- **@popperjs/core**: `^2` (Bootstrap’s dependency)
-- **react-cookie**: `4.1.1` (as in tutorial)
-
-> The Key upgrade I initally made vs the article: **reactstrap v9** (not v8) to match **Bootstrap 5**.
-> Also recommended, i found out **React 18** (not 19) for max compatibility with Router v5. Otherwise the Navigation will not work reliable.
-
-The goal is to "modernize" the React Frontend to
-use React V19, Router V6 and Bootstrap 5
-
-In this version, i migrated:
-
-- **Npm to use Vite**
-
-- **React 19**
-  
-  - `npm i --save-exact react@19 react-dom@19`
-  - Fixed any peer-dep warnings
-  - 
-- **Convert classes → function components + hooks**
-  
-  - `useState`, `useEffect`, `useNavigate` (v6)
+- [Vite 6](https://vitejs.dev) with [React 19](https://reactjs.org), [TypeScript 5](https://www.typescriptlang.org) and [absolute imports](https://github.com/aleclarson/vite-tsconfig-paths).
+- [Tailwind CSS v4](https://tailwindcss.com) for easy stylization.
+- [Biome V2](https://next.biomejs.dev) for linting, formatting and automatic import sorting.
+- Write unit and integration tests with [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/).
+- Write e2e tests with [Playwright 1.52](https://www.cypress.io).
 
 ## Project layout
 
@@ -55,67 +34,30 @@ Running the Application as Single Artifact with Spring Boot
 ./mvnw clean spring-boot:run -Psingle-art
 ```
 
-### Frontend and Backend seperate Process
+### Frontend and Backend in seperate Processes
 
-Backend (Spring Boot(
+Backend (Spring Boot)
 
 bash
-./mvnw clean spring-boot:run
+./mvnw clean spring-boot:run -Dspring-boot.run.profiles=dev
 ``
 
-Frontend (port 3000, proxies to 8080):
+Frontend (port 5173, proxies to 8080):
+
+Change in file .env.development VITE_USE_MOCK=false
 
 ```bash
-cd reactboot/frontend
-npm ci
-npm start
+cd frontend
+pnpm dev
 ```
 
-Open: http://localhost:3000
+### Only Frontend with Mock Data
 
-> **Note:** In development, `package.json` may contain `"proxy": "http://localhost:8080"`.
+Frontend (port 5173)
 
-## Fresh install (freezing the working versions)
-
-The following helped me to get around the version "mess" i encountered. Full disclosure: i am a newbie to the Javascript Eco culture.
-
-From `reactboot/frontend`:
+Change in file .env.development VITE_USE_MOCK=true
 
 ```bash
-# Clean any previous installs
-rm -rf node_modules package-lock.json
-
-# Install exact React + Router v5
-npm i --save-exact react@18.3.1 react-dom@18.3.1 react-router-dom@6
-
-# Install Bootstrap 5 compatible UI stack
-npm i reactstrap@^9 bootstrap@^5 @popperjs/core@^2 react-cookie@4.1.1
-
-# Create a fresh lockfile reflecting the above
-npm install
-
-# (In src/index.js or main.jsx) load Bootstrap CSS once:
-# import 'bootstrap/dist/css/bootstrap.min.css';
+cd frontend
+pnpm dev
 ```
-
-**Commit both** `package.json` **and** `package-lock.json`.
-On CI/fresh clones use `npm ci` for reproducible installs.
-
-## Next Steps
-
-- **Testing**
-  
-  - Unit/UI: Jest + React Testing Library
-  - Backend: Spring Boot Test
-- **CI**
-  
-  - Or only via Maven
-- **Infra (Optional)**
-  
-  - Env vars for API base (`REACT_APP_API_BASE=/api`)
-  - NGINX/Ingress with `/api` proxy, SPA fallback
-
-## Credits
-
-Based on: Baeldung “Spring Boot + React: CRUD” (linked above), adapted to a compatible dependency set and with notes for upgrade paths.
-
