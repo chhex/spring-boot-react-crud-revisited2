@@ -1,0 +1,23 @@
+[
+	{
+		"id": 1,
+		"name": "Christoph Henrici",
+		"email": "chhenrici©example.com"
+	},
+	{
+		"id": 2,
+		"name": "Another one ",
+		"email": "another©example.com"
+	},
+	{
+		"id": 3,
+		"name": "Third Client",
+		"email": "third©example.com"
+	},
+	{
+		"id": 4,
+		"name": "Wtf",
+		"email": "fourth©example.com"
+	}
+	
+]

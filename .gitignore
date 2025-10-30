@@ -1,0 +1,37 @@
+
+**/.DS_Store
+
+# Maven
+**/target/
+
+# IDEs
+**/.idea/
+*.iml
+**/.project
+**/.classpath
+**/.settings/
+**/.vscode/
+**/node
+
+
+# Node/React
+**/node_modules/
+**/build/
+**/dist/
+**/.env.local
+**/.env.development.local
+**/dist-ssr/
+**/*.local
+**/coverage/
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+**/.parcel-cache/
+**/.next/
+**/out/
+**/.nyc_output
+# logs
+**/npm-debug.log*
+**/yarn-error.log*
+
