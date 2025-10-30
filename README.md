@@ -64,31 +64,29 @@ pnpm dev
 
 ## TODO's and next Steps
 
-## 1️⃣ Frontend API Layer (`src/api/clients.ts`)
+#### 1️⃣ Frontend API Layer (`src/api/clients.ts`)
 
 - [ ] Implement all CRUD calls aligned with Spring Boot endpoints:
 - [ ] Include `credentials: 'include'` for session support
 
-## 2️⃣ React Query Integration
+#### 2️⃣ React Query Integration
 
 - [ ] Add CUD (Create , Update , Delete) Actions
 
-## 3️⃣ Backend (Spring Boot)
+#### 3️⃣ Backend (Spring Boot)
 
 - [ ] Validate payloads
 - [ ] Tenant scoping already active via Hibernate filter
 - [ ] Extend `ClientRepository` with `deleteByTenantId()`
 
----
-
-## 4️⃣ Forms & Validation
+#### 4️⃣ Forms & Validation
 
 - [ ] Convert forms to controlled inputs or use `react-hook-form`
 - [ ] Add simple client-side checks (e.g. name required, valid email)
 - [ ] Later integrate Valibot/Zod with `@hookform/resolvers`
 - [ ] Provide visual feedback (e.g. Tailwind form styling)
 
-## 6️⃣ Session & Tenant Management
+#### 6️⃣ Session & Tenant Management
 
 - [x] Use **Spring Session JDBC**
 - [x] Store `TENANT_ID` in session (`anon:<sessionId>` or username)
@@ -97,9 +95,7 @@ pnpm dev
 - [ ] On logout (if added): wipe tenant’s rows
 - [ ] Optional janitor job for stale tenants
 
----
-
-## 7️⃣ Build & Deployment
+#### 7️⃣ Build & Deployment
 
 - [ ] Add GitHub Action (optional):
   - [ ] Java 21 + pnpm setup
@@ -111,16 +107,12 @@ pnpm dev
   - [ ] Deployable to Render / Fly.io / Cloud Run
   - [ ] `SPRING_PROFILES_ACTIVE=demo`
 
----
-
-## 8️⃣ UX & Polish
+#### 8️⃣ UX & Polish
 
 - [ ] Add header bar with "Reset Demo" + "Logout" buttons
 - [ ] Add loading spinners, empty states, and error boundaries
 
----
-
-## 9️⃣ Future Enhancements
+#### 9️⃣ Future Enhancements
 
 - [ ] Pagination & search
 - [ ] Toast notifications for CRUD actions
