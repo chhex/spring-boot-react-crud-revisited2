@@ -5,17 +5,17 @@
 
 # Revisited Baeldung Tutorial – React & Spring Boot CRUD
 
-Revisited Baeldung Tutorial CRUD Application with React and Spring Boot — see https://www.baeldung.com/spring-boot-react-crud — **with versions pinned** so it actually works with today’s ecosystem.
+Revisited Baeldung Tutorial CRUD Application with React and Spring Boot — see https://www.baeldung.com/spring-boot-react-crud 
 
 The original article is ~4 years old and mixes libraries whose majors changed since.
 
-Also I migrated the initial tutorial to the Vite starter [Template Vitamin 2.0](https://github.com/wtchnm/Vitamin), which uses:
+I migrated the initial tutorial to the Vite starter [Template Vitamin 2.0](https://github.com/wtchnm/Vitamin) to use:
 
 - [Vite 6](https://vitejs.dev) with [React 19](https://reactjs.org), [TypeScript 5](https://www.typescriptlang.org) and [absolute imports](https://github.com/aleclarson/vite-tsconfig-paths).
 - [Tailwind CSS v4](https://tailwindcss.com) for easy stylization.
 - [Biome V2](https://next.biomejs.dev) for linting, formatting and automatic import sorting.
-- Write unit and integration tests with [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/).
-- Write e2e tests with [Playwright 1.52](https://www.cypress.io).
+- [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/) for teasting 
+- [Playwright 1.52](https://www.cypress.io) to write Integrationtests. 
 
 ## Project layout
 
@@ -38,10 +38,9 @@ Running the Application as Single Artifact with Spring Boot
 
 Backend (Spring Boot)
 
-bash
+```bash
 ./mvnw clean spring-boot:run -Dspring-boot.run.profiles=dev
-``
-
+```
 Frontend (port 5173, proxies to 8080):
 
 Change in file .env.development VITE_USE_MOCK=false
@@ -64,29 +63,29 @@ pnpm dev
 
 ## TODO's and next Steps
 
-#### 1️⃣ Frontend API Layer (`src/api/clients.ts`)
+##### 1️⃣ Frontend API Layer (`src/api/clients.ts`)
 
 - [ ] Implement all CRUD calls aligned with Spring Boot endpoints:
 - [ ] Include `credentials: 'include'` for session support
 
-#### 2️⃣ React Query Integration
+##### 2️⃣ React Query Integration
 
 - [ ] Add CUD (Create , Update , Delete) Actions
 
-#### 3️⃣ Backend (Spring Boot)
+##### 3️⃣ Backend (Spring Boot)
 
 - [ ] Validate payloads
 - [ ] Tenant scoping already active via Hibernate filter
 - [ ] Extend `ClientRepository` with `deleteByTenantId()`
 
-#### 4️⃣ Forms & Validation
+##### 4️⃣ Forms & Validation
 
 - [ ] Convert forms to controlled inputs or use `react-hook-form`
 - [ ] Add simple client-side checks (e.g. name required, valid email)
 - [ ] Later integrate Valibot/Zod with `@hookform/resolvers`
 - [ ] Provide visual feedback (e.g. Tailwind form styling)
 
-#### 6️⃣ Session & Tenant Management
+##### 6️⃣ Session & Tenant Management
 
 - [x] Use **Spring Session JDBC**
 - [x] Store `TENANT_ID` in session (`anon:<sessionId>` or username)
@@ -95,16 +94,16 @@ pnpm dev
 - [ ] On logout (if added): wipe tenant’s rows
 - [ ] Optional janitor job for stale tenants
 
-#### 7️⃣ Build & Deployment
+##### 7️⃣ Build & Deployment
 
-- [ ] Add GitHub Action (optional):
+- [ ] Add GitHub Actions:
   - [ ] Java 21 + pnpm setup
   - [ ] Cache Maven + pnpm deps
   - [ ] Run backend & frontend tests
   - [ ] Publish JAR / Docker image
 - [ ] Dockerfile:
   - [ ] Multi-stage build
-  - [ ] Deployable to Render / Fly.io / Cloud Run
+  - [ ] Deployable to Render or Fly.io or Cloud Run
   - [ ] `SPRING_PROFILES_ACTIVE=demo`
 
 #### 8️⃣ UX & Polish
@@ -118,6 +117,6 @@ pnpm dev
 - [ ] Toast notifications for CRUD actions
 - [ ] Login / per-user tenants
 - [ ] Automated cleanup job (`@Scheduled`)
-- [ ] E2E tests (Playwright or Cypress)
+- [ ] E2E tests (Playwright)
 - [ ] Modern component refactor (Hooks + Context)
 - [ ] Deploy live demo
