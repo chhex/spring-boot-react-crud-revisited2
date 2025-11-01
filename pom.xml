@@ -29,6 +29,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<skip.frontend>false</skip.frontend>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -65,6 +66,23 @@
 		<profile>
 			<id>single-jar</id>
 			<build>
+				<resources>
+					<!-- regular resources -->
+					<resource>
+						<directory>${project.basedir}/src/main/resources</directory>
+						<filtering>false</filtering>
+					</resource>
+
+					<!-- Vite build output -->
+					<resource>
+						<directory>${project.basedir}/frontend/dist</directory>
+						<filtering>false</filtering>
+						<includes>
+							<include>**/*</include>
+						</includes>
+					</resource>
+				</resources>
+
 				<plugins>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -78,6 +96,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
+									<skip>${skip.frontend}</skip>
 									<executable>pnpm</executable>
 									<arguments>
 										<argument>install</argument>
@@ -94,6 +113,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
+									<skip>${skip.frontend}</skip>
 									<executable>pnpm</executable>
 									<arguments>
 										<argument>run</argument>

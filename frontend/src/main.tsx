@@ -1,7 +1,7 @@
 import './global.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router';
+import { HashRouter } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { App } from './App';
@@ -31,9 +31,9 @@ async function bootstrap() {
       <StrictMode>
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
-          <BrowserRouter>
+          <HashRouter>
             <App />
-          </BrowserRouter>
+          </HashRouter>
         </QueryClientProvider>
       </StrictMode>
     );
@@ -49,9 +49,9 @@ async function bootstrap() {
         <StrictMode>
           <QueryClientProvider client={queryClient}>
             <ReactQueryDevtools initialIsOpen={false} />
-            <BrowserRouter>
+            <HashRouter>
               <App />
-            </BrowserRouter>
+            </HashRouter>
           </QueryClientProvider>
         </StrictMode>
       );

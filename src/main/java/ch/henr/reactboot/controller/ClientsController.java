@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.henr.reactboot.db.ClientRepository;
 import ch.henr.reactboot.model.Client;
 
+
 @RestController
-@RequestMapping("/clients")
+@RequestMapping(value = "/clients")
 public class ClientsController {
 
     private final ClientRepository clientRepository;

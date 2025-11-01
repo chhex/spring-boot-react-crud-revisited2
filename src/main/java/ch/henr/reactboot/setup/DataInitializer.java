@@ -19,9 +19,9 @@ public class DataInitializer {
     return args -> {
       log.info("DataInitializer starting, repo.count() = {}", repo.count());
       if (repo.count() == 0) {
-        repo.save(new Client(null, "Ada Lovelace", "ada@math.io"));
-        repo.save(new Client(null, "Grace Hopper", "grace@navy.mil"));
-        repo.save(new Client(null, "Alan Turing", "alan@bletchley.uk"));
+        repo.save(new Client(null, "Pete Powerlace", "pete@math.io"));
+        repo.save(new Client(null, "Grace Hopper", "grace@gmail.com"));
+        repo.save(new Client(null, "Peter Mueller", "hess@schwisscom.ch"));
         log.info("✅ Loaded demo clients");
       } else {
         log.info("Skipping seed, existing rows = {}", repo.count());
