@@ -10,14 +10,13 @@ jobs:
     defaults: { run: { working-directory: frontend } }
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '20', cache: 'pnpm', cache-dependency-path: 'frontend/pnpm-lock.yaml' }
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.20.0
+          version: latest
           run_install: |
-            - recursive: false
-              args: [--frozen-lockfile]
+            - recursive: true
+              args: [--strict-peer-dependencies, --frozen-lockfile]
+            - args: [--global, gulp, prettier, typescript]
       - run: pnpm run build
       - run: |
           if grep -q '"test"' package.json; then pnpm test -- --run; else echo "no tests"; fi
