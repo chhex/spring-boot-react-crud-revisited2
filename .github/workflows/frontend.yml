@@ -25,8 +25,8 @@ jobs:
         with:
           node-version: '20'
           # If this was failing, comment these two lines first, then re-enable once the ls step passes
-          cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'  # path relative to REPO ROOT
+         # cache: 'pnpm'
+         # cache-dependency-path: 'frontend/pnpm-lock.yaml'  # path relative to REPO ROOT
 
       # Install pnpm (puts it on PATH)
       - name: Setup pnpm & install deps
