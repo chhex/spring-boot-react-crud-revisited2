@@ -27,7 +27,7 @@ jobs:
       - run: pnpm run build
 
       - run: |
-          if grep -q '"test"' package.json; then pnpm test -- --run; else echo "no tests"; fi
+          if grep -q '"test"' package.json; then CI=true pnpm test -- --run; else echo "no tests"; fi
 
       - uses: actions/upload-artifact@v4
         with:
