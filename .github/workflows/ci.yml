@@ -10,13 +10,13 @@ on:
 jobs:
   frontend:
     name: Frontend (reused)
-    uses:  chhex/spring-boot-react-crud-revisted2/.github/workflows/frontend.yml@main   # 👈 reuse
+    uses:  chhex/spring-boot-react-crud-revisited2/.github/workflows/frontend.yml@main  
     permissions:
       contents: read
 
   backend:
     name: Backend (reused)
-    uses: chhex/spring-boot-react-crud-revisted2/.github/workflows/backend.yml@main    # 👈 reuse
+    uses: chhex/spring-boot-react-crud-revisited2/.github/workflows/backend.yml@main   
     permissions:
       contents: read
 
