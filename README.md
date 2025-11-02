@@ -1,5 +1,5 @@
 [![Frontend (pnpm)](https://github.com/chhex/spring-boot-react-crud-revisited2/actions/workflows/frontend.yml/badge.svg)](https://github.com/chhex/spring-boot-react-crud-revisited2/actions/workflows/frontend.yml)
-
+[![Backend (Maven)](https://github.com/chhex/spring-boot-react-crud-revisited2/actions/workflows/backend.yml/badge.svg)](https://github.com/chhex/spring-boot-react-crud-revisited2/actions/workflows/backend.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
