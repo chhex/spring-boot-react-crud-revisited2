@@ -1,54 +1,25 @@
 name: Frontend (pnpm)
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - "frontend/**"
-  pull_request:
-    branches: [ main ]
-    paths:
-      - "frontend/**"
-  workflow_dispatch:
+  workflow_call: {}          # enables reuse via "uses:"
+  workflow_dispatch: {}    
 
 jobs:
   build:
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: frontend
-    env:
-      CI: "true"
-
+    defaults: { run: { working-directory: frontend } }
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm', cache-dependency-path: 'frontend/pnpm-lock.yaml' }
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: "20"
-          cache: "pnpm"
-          cache-dependency-path: "frontend/pnpm-lock.yaml"
-
-      # This step guarantees pnpm is available
-      - name: Install pnpm manually (stable version)
-        run: |
-          npm install -g pnpm@10.20.0
-          pnpm -v
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build (Vite)
-        run: pnpm run build
-
-      - name: Run tests (Vitest)
-        run: |
-          if grep -q '"test"' package.json; then pnpm test -- --run; else echo "No tests found"; fi
-
-      - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist
+          version: 10.20.0
+          run_install: |
+            - recursive: false
+              args: [--frozen-lockfile]
+      - run: pnpm run build
+      - run: |
+          if grep -q '"test"' package.json; then pnpm test -- --run; else echo "no tests"; fi
+      - uses: actions/upload-artifact@v4
+        with: { name: frontend-dist, path: frontend/dist }
