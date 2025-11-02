@@ -47,7 +47,15 @@ jobs:
             type=raw,value=latest     # always push :latest on main
             type=sha                  # also push :sha-<commit>
             type=ref,event=tag        # if build triggered by git tag -> use that tag
+    
+      - name: Set up QEMU (optional, for multi-arch)
+        uses: docker/setup-qemu-action@v3
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+            install: true
+            driver: docker-container
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
