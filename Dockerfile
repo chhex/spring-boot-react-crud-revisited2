@@ -1,4 +1,7 @@
-# ---- frontend stage ----------------------------------------------------------
+# A 3 stage Dockerfile, whoch first installs pnpm and builds the frontend,
+# since the maven build expects pnpm installed and the built frontend assets to be present.
+
+# ---- frontend build stage ----------------------------------------------------------
 FROM node:20-alpine AS web
 WORKDIR /app
 # enable pnpm (you can pin a version if you like)
@@ -12,14 +15,14 @@ RUN pnpm install --frozen-lockfile
 COPY frontend/ .
 RUN pnpm build   # -> /app/frontend/dist
 
-# ---- backend stage -----------------------------------------------------------
+# ---- backend build stage , single jar -----------------------------------------------------------
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -q -DskipTests dependency:go-offline
 # copy backend sources
 COPY src ./src
-# copy the built frontend into the location your pom expects
+# copy the built frontend into the location the pom expects
 COPY --from=web /app/frontend/dist ./frontend/dist
 RUN mvn -q -Psingle-jar -DskipTests -Dskip.frontend=true clean package
 

@@ -1,0 +1,59 @@
+name: Build & Push Docker Image
+
+on:
+  push:
+    branches: [ main ]        # run on pushes to main
+    tags: [ "v*" ]            # and on version tags like v1.0.0
+  workflow_dispatch:          # allow manual run from the Actions tab
+
+jobs:
+  docker:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write         # permission needed to push to GHCR
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}  # e.g. christoph/repo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # (Optional but nice) run backend unit tests quickly before building image
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Backend tests (skip frontend)
+        run: mvn -B -Dskip.frontend=true -DskipITs -DskipUITests test
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # auto-provided, no setup needed
+
+      - name: Extract Docker metadata (tags & labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest     # always push :latest on main
+            type=sha                  # also push :sha-<commit>
+            type=ref,event=tag        # if build triggered by git tag -> use that tag
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .                  # build from repo root (Dockerfile here)
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}     # multiple tags from previous step
+          labels: ${{ steps.meta.outputs.labels }} # standard OCI labels
+          cache-from: type=gha                     # use GitHub cache
+          cache-to: type=gha,mode=max              # save cache for faster rebuilds
