@@ -65,3 +65,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }} # standard OCI labels
           cache-from: type=gha                     # use GitHub cache
           cache-to: type=gha,mode=max              # save cache for faster rebuilds
+          platforms: linux/amd64,linux/arm64
