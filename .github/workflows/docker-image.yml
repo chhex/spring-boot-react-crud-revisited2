@@ -2,7 +2,7 @@ name: Build & Push Docker Image
 
 on:
   workflow_run:
-    workflows: ["Frontend (pnpm)"]
+    workflows: ["Frontend (pnpm)", "Backend (Maven)"]
     types: [completed]
   workflow_dispatch:          # allow manual run from the Actions tab
 
@@ -29,7 +29,7 @@ jobs:
           cache: maven
 
       - name: Backend tests (skip frontend)
-        run: mvn -B -Dskip.frontend=true -DskipITs -DskipUITests test
+        run: mvn -B -Dskip.frontend=true test
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
