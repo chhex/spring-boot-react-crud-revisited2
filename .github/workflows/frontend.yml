@@ -7,16 +7,41 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    defaults: { run: { working-directory: frontend } }
+    defaults:
+      run:
+        working-directory: frontend
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Sanity: make sure the lockfile exists at the path we're about to cache
+      - name: Show lockfile
+        run: ls -l pnpm-lock.yaml
+
+      # Setup Node (you can add caching AFTER the path is verified)
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          version: latest
+          node-version: '20'
+          # If this was failing, comment these two lines first, then re-enable once the ls step passes
+          cache: 'pnpm'
+          cache-dependency-path: 'frontend/pnpm-lock.yaml'  # path relative to REPO ROOT
+
+      # Install pnpm (puts it on PATH)
+      - name: Setup pnpm & install deps
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.20.0
           run_install: |
-            - recursive: true
-              args: [--strict-peer-dependencies, --frozen-lockfile]
-            - args: [--global, gulp, prettier, typescript]
-      - run: pnpm run build
-      - uses: actions/upload-artifact@v4
-        with: { name: frontend-dist, path: frontend/dist }
+            - recursive: false
+              args: [--frozen-lockfile]
+
+      - name: Build (Vite)
+        run: pnpm run build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
