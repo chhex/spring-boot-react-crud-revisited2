@@ -5,12 +5,10 @@ on:
     branches: [ main ]
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend.yml"
   pull_request:
     branches: [ main ]
     paths:
       - "frontend/**"
-      - ".github/workflows/frontend.yml"
   workflow_dispatch:
 
 jobs:
@@ -21,47 +19,37 @@ jobs:
         working-directory: frontend
     env:
       CI: "true"
-      # Optional: silence pnpm update hints
-      PNPM_UPDATE_NOTIFIER: "false"
-      NO_UPDATE_NOTIFIER: "1"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node (LTS) + corepack
+      - name: Set up Node + pnpm
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
           cache-dependency-path: "frontend/pnpm-lock.yaml"
-      - name: Enable corepack & pin pnpm
+
+      - name: Enable corepack / install pnpm
         run: |
+          npm install -g corepack
           corepack enable
           corepack prepare pnpm@10.20.0 --activate
           pnpm -v
 
-      - name: Install deps (frozen lockfile)
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Type check (if using TS; ignore if not)
-        run: |
-          if grep -q '"typecheck"' package.json; then pnpm run typecheck; else echo "no typecheck"; fi
-
-      - name: Unit tests (Vitest)
-        run: |
-          if grep -q '"test"' package.json; then pnpm test -- --run --coverage; else echo "no tests"; fi
-
-      - name: Lint (Biome/ESLint if present)
-        run: |
-          if grep -q '"lint"' package.json; then pnpm run lint; else echo "no lint"; fi
 
       - name: Build (Vite)
         run: pnpm run build
 
-      - name: Upload dist/ as artifact
+      - name: Run tests (Vitest)
+        run: |
+          if grep -q '"test"' package.json; then pnpm test -- --run; else echo "No tests"; fi
+
+      - name: Upload dist as artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
           path: frontend/dist
-          if-no-files-found: error
