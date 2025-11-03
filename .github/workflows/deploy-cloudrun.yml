@@ -1,7 +1,7 @@
 name: Deploy to Google Cloud Run (from GHCR image)
 
 on:
-  workflow_dispatch: {}   # manual trigger via GitHub Actions tab
+  workflow_dispatch: {}
 
 env:
   GCP_PROJECT_ID: clear-rock-477020-a0
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Authenticate to GCP using service account JSON secret
+      # Auth to GCP with SA JSON in secret
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -28,16 +28,26 @@ jobs:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           export_default_credentials: true
 
+      # Configure Docker cred helper for Artifact Registry
       - name: Enable Artifact Registry docker auth
         run: gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
 
-      - name: Pull from GHCR and Push to Artifact Registry
+      # (Belt & suspenders) Explicit docker login to AR with OAuth token
+      - name: Docker login to Artifact Registry
         run: |
-          docker pull ghcr.io/chhex/spring-boot-react-crud-revisited2:latest
-          docker tag ghcr.io/chhex/spring-boot-react-crud-revisited2:latest \
-            $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GAR_REPOSITORY/$IMAGE_NAME:latest
-          docker push $GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GAR_REPOSITORY/$IMAGE_NAME:latest
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GCP_REGION-docker.pkg.dev
 
+      # Copy ONLY the amd64 variant from GHCR -> Artifact Registry
+      - name: Setup crane
+        uses: imjasonh/setup-crane@v0.4
+
+      - name: Copy GHCR → AR (amd64)
+        run: |
+          SRC=ghcr.io/chhex/spring-boot-react-crud-revisited2:latest
+          DST=$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$GAR_REPOSITORY/$IMAGE_NAME:latest
+          crane cp --platform=linux/amd64 "$SRC" "$DST"
+
+      # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
