@@ -14,10 +14,15 @@ The original article is ~4 years old and mixes libraries whose majors changed si
 I migrated the initial tutorial to the Vite starter [Template Vitamin 2.0](https://github.com/wtchnm/Vitamin) to use:
 
 - [Vite 6](https://vitejs.dev) with [React 19](https://reactjs.org), [TypeScript 5](https://www.typescriptlang.org) and [absolute imports](https://github.com/aleclarson/vite-tsconfig-paths).
-- [Tailwind CSS v4](https://tailwindcss.com) for easy stylization.
+- [Tailwind CSS v4](https://tailwindcss.com) for inline stylization.
 - [Biome V2](https://next.biomejs.dev) for linting, formatting and automatic import sorting.
-- [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/) for teasting 
-- [Playwright 1.52](https://www.cypress.io) to write Integrationtests. 
+- [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/) for teasting.
+
+The Java maven build supports a single jar execution for Spring Boot, with all the necessary Frontend assets. 
+
+A Dockerfile supports a Multistep build for building and run the App as Single jar. 
+
+Additionaly there are Google Actions, which support among other a Github Docker image and a Action, whoch builds a Docker image and deploys it to Google Cloud Run. 
 
 ## Project layout
 
@@ -36,6 +41,8 @@ Running the Application as Single Artifact with Spring Boot
 ./mvnw clean spring-boot:run -Psingle-art
 ```
 
+This opens on <http://localhost:8080>
+
 ### Frontend and Backend in seperate Processes
 
 Backend (Spring Boot)
@@ -43,7 +50,6 @@ Backend (Spring Boot)
 ```bash
 ./mvnw clean spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-Frontend (port 5173, proxies to 8080):
 
 Change in file .env.development VITE_USE_MOCK=false
 
@@ -52,9 +58,10 @@ cd frontend
 pnpm dev
 ```
 
-### Only Frontend with Mock Data
+This opens to the Frontend port <http://localhost:5173> and proxies for the Rest calls to 
+Frontend (port 5173, proxies to 8080) : <http://localhost:8080>
 
-Frontend (port 5173)
+### Only Frontend with Mock Data
 
 Change in file .env.development VITE_USE_MOCK=true
 
@@ -62,6 +69,8 @@ Change in file .env.development VITE_USE_MOCK=true
 cd frontend
 pnpm dev
 ```
+
+This opens to the Frontend port <http://localhost:5173> only and takes it's data from frontend/src/mocks/data/clients.json 
 
 ## TODO's and next Steps
 
@@ -98,15 +107,15 @@ pnpm dev
 
 ##### 7️⃣ Build & Deployment
 
-- [ ] Add GitHub Actions:
-  - [ ] Java 21 + pnpm setup
-  - [ ] Cache Maven + pnpm deps
-  - [ ] Run backend & frontend tests
-  - [ ] Publish JAR / Docker image
-- [ ] Dockerfile:
-  - [ ] Multi-stage build
-  - [ ] Deployable to Render or Fly.io or Cloud Run
-  - [ ] `SPRING_PROFILES_ACTIVE=demo`
+- [x] Add GitHub Actions:
+  - [x] Java 21 + pnpm setup
+  - [x] Cache Maven + pnpm deps
+  - [x] Run backend & frontend tests
+  - [x] Publish JAR / Docker image
+- [x] Dockerfile:
+  - [x] Multi-stage build
+  - [x] Deployable to Render or Fly.io or Cloud Run
+  - [x] Deploy to Google Cloud Run
 
 #### 8️⃣ UX & Polish
 
