@@ -7,7 +7,7 @@
 
 # Revisited Baeldung Tutorial – React & Spring Boot CRUD
 
-Revisited Baeldung Tutorial CRUD Application with React and Spring Boot — see https://www.baeldung.com/spring-boot-react-crud 
+Revisited Baeldung Tutorial CRUD Application with React and Spring Boot — see <https://www.baeldung.com/spring-boot-react-crud>
 
 The original article is ~4 years old and mixes libraries whose majors changed since.
 
@@ -18,11 +18,11 @@ I migrated the initial tutorial to the Vite starter [Template Vitamin 2.0](https
 - [Biome V2](https://next.biomejs.dev) for linting, formatting and automatic import sorting.
 - [Vitest 3](https://vitest.dev/) and [Testing Library 16](https://testing-library.com/) for teasting.
 
-The Java maven build supports a single jar execution for Spring Boot, with all the necessary Frontend assets. 
+The Java maven build supports a single jar execution of Spring Boot, with all the necessary Frontend assets.
 
-A Dockerfile supports a Multistep build for building and run the App as Single jar. 
+A Dockerfile supports a Multistep Docker Image build for building and run the App as Single jar.
 
-Additionaly there are Google Actions, which support among other a Github Docker image and a Action, whoch builds a Docker image and deploys it to Google Cloud Run. 
+Additionaly there are Google Actions, which support among other a Github Docker image and a Action, whoch builds a Docker image and deploys it to Google Cloud Run.
 
 ## Project layout
 
@@ -58,7 +58,7 @@ cd frontend
 pnpm dev
 ```
 
-This opens to the Frontend port <http://localhost:5173> and proxies for the Rest calls to 
+This opens to the Frontend port <http://localhost:5173> and proxies for the Rest calls to
 Frontend (port 5173, proxies to 8080) : <http://localhost:8080>
 
 ### Only Frontend with Mock Data
@@ -70,7 +70,7 @@ cd frontend
 pnpm dev
 ```
 
-This opens to the Frontend port <http://localhost:5173> only and takes it's data from frontend/src/mocks/data/clients.json 
+This opens to the Frontend port <http://localhost:5173> only and takes it's data from frontend/src/mocks/data/clients.json
 
 ## TODO's and next Steps
 
