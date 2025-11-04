@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router';
-import { Head } from '@/components/Head';
+import { PageLayout } from '@/components/PageLayout';
 
 export function NewClient() {
     const navigate = useNavigate();
 
     return (
-        <div className="p-6">
-            <Head title="New Client" />
+        <PageLayout title="New Client" >
 
             {/* Header */}
             <div className="mb-6 flex items-center justify-between">
@@ -55,12 +54,6 @@ export function NewClient() {
 
                     <div className="mt-2 flex justify-end gap-3">
                         <button
-                            type="button"
-                            onClick={() => navigate('/clients')}
-                            className="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"            >
-                            Cancel
-                        </button>
-                        <button
                             type="submit"
                             disabled
                             className="cursor-not-allowed rounded bg-indigo-400 px-4 py-2 text-sm font-medium text-white opacity-60"
@@ -68,9 +61,15 @@ export function NewClient() {
                         >
                             Save
                         </button>
+                         <button
+                            type="button"
+                            onClick={() => navigate('/clients')}
+                            className="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"            >
+                            Cancel
+                        </button>
                     </div>
                 </form>
             </div>
-        </div>
+        </PageLayout>
     );
 }

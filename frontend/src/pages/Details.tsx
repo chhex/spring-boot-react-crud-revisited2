@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Navigate, useParams, useNavigate } from 'react-router'
 import { getClients } from '@/api/clients'
-import { Head } from '@/components/Head'
+import { PageLayout } from '@/components/PageLayout';
 
 function initials(name: string) {
 	const p = name.trim().split(/\s+/);
@@ -31,8 +31,7 @@ export function Details() {
 	const color = colors[(client.name.length + (Number(id) || 0)) % colors.length];
 
 	return (
-		<div className="p-6">
-			<Head title={`Client: ${client.name}`} />
+		<PageLayout title={`Client: ${client.name}`} >
 			<div className="mb-6 flex items-center justify-between">
 				<h2 className="text-2xl font-semibold text-gray-900">Client Details</h2>
 				<button
@@ -64,9 +63,12 @@ export function Details() {
 						</label>
 						<input
 							id="id"
-							value={id}
+							name="id"
+							type="text"
+							value={client.id || ''}
 							readOnly
-							className="w-full rounded border border-gray-300 bg-gray-100 px-3 py-2 text-gray-700"
+							disabled
+							className="bg-gray-100 cursor-not-allowed"
 						/>
 					</div>
 
@@ -103,17 +105,17 @@ export function Details() {
 							className="cursor-not-allowed rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white opacity-60"
 							title="Edit coming soon"
 						>
-							Edit
+							Save
 						</button>
 						<button
 							type="button"
 							onClick={() => navigate(-1)}
 							className="rounded border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"						>
-							Close
+							Cancel
 						</button>
 					</div>
 				</form>
 			</div>
-		</div>
+		</PageLayout>
 	);
 }
