@@ -34,6 +34,10 @@ export default defineConfig(({ mode }) => {
                 target: BACKEND_URL,
                 changeOrigin: true,
               },
+              '/tenantInfo': {
+                target: BACKEND_URL,
+                changeOrigin: true,
+              },
             },
           }),
     },

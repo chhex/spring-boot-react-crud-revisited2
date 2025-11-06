@@ -10,9 +10,9 @@ export type Client = v.InferOutput<typeof Client>
 const Clients = v.array(Client)
 
 export async function getClients() {
-	const response = await fetch('/clients')
+	const response = await fetch('/clients', {credentials: 'include'})
 	if (!response.ok) {
-		throw new Error('Failed to fetch')
+		throw new Error('Failed to fetch Clients')
 	}
 	return v.parse(Clients, await response.json())
 }
