@@ -7,7 +7,7 @@ export const handlers = [
 		await delay('real')
 		return HttpResponse.json(clients)
 	}),
-	http.get('/api/tenant', async () => {
+	http.get('/tenantInfo', async () => {
     await delay('real')
     return HttpResponse.json({
       tenantDisplay: getMockTenantDisplay(),

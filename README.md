@@ -86,7 +86,7 @@ This opens to the Frontend port <http://localhost:5173> only and takes it's data
 ##### 3️⃣ Backend (Spring Boot)
 
 - [ ] Validate payloads
-- [ ] Tenant scoping already active via Hibernate filter
+- [x] Tenant scoping already active via Hibernate filter
 - [ ] Extend `ClientRepository` with `deleteByTenantId()`
 
 ##### 4️⃣ Forms & Validation
