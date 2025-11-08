@@ -6,6 +6,7 @@ import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,9 +23,13 @@ import jakarta.servlet.http.HttpSession;
 @Component
 public class TenantFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(TenantFilter.class);
+    @Autowired
     private final TenantRepository tenants;
+    @Autowired(required = false)
     private final DemoSeedService demoSeed; // inject (present only in
 
+
+    
     public TenantFilter() {
         this.tenants = null;
         this.demoSeed = null;
@@ -40,7 +45,7 @@ public class TenantFilter extends OncePerRequestFilter {
         this.demoSeed = demoSeed;
     }
 
-    
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)

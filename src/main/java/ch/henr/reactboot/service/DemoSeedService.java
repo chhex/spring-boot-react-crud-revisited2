@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Profile({"dev","prod"}) // for the moment also in prod
+//@Profile({"dev","prod"}) // for the moment also in prod
 public class DemoSeedService {
   private final ClientsRepository clients;
   private final TenantRepository tenants;
 
+ 
   public DemoSeedService(ClientsRepository clients, TenantRepository tenants) {
     this.clients = clients; this.tenants = tenants;
   }
