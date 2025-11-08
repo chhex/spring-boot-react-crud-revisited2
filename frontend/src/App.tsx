@@ -1,6 +1,6 @@
 import {lazy, Suspense} from 'react'
 import {ErrorBoundary, type FallbackProps} from 'react-error-boundary'
-import {Route, Routes} from 'react-router'
+import {Route, Routes} from 'react-router-dom'
 import {LoadingOrError} from '@/components/LoadingOrError'
 import {Gallery} from '@/pages/Gallery'
 import { NewClient } from './pages/NewClient'

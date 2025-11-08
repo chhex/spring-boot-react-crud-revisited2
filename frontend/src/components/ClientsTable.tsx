@@ -1,8 +1,35 @@
-// src/components/ClientTable.tsx
-import { Link } from 'react-router';
-import type {Client as ClientType} from '@/api/clients'
+// src/components/ClientsTable.tsx
+import { Link } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteClient, type Client as ClientType } from '@/api/clients';
 
 export function ClientsTable({ clients }: { clients: ClientType[] }) {
+  const qc = useQueryClient();
+
+  const del = useMutation({
+    mutationFn: (id: number) => deleteClient(id),
+    onMutate: async (id) => {
+      await qc.cancelQueries({ queryKey: ['clients'] });
+      const prevClients = qc.getQueryData<ClientType[]>(['clients']);
+      // optimistic remove
+      qc.setQueryData<ClientType[]>(['clients'], (old = []) => old.filter(c => c.id !== id));
+      // optimistic tenantInfo-- (optional, see next block)
+      const prevTenant = qc.getQueryData<any>(['tenantInfo']);
+      if (prevTenant) {
+        qc.setQueryData(['tenantInfo'], { ...prevTenant, clientCount: Math.max(0, (prevTenant.clientCount ?? 0) - 1) });
+      }
+      return { prevClients, prevTenant };
+    },
+    onError: (_err, _id, ctx) => {
+      if (ctx?.prevClients) qc.setQueryData(['clients'], ctx.prevClients);
+      if (ctx?.prevTenant) qc.setQueryData(['tenantInfo'], ctx.prevTenant);
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ['clients'] });
+      qc.invalidateQueries({ queryKey: ['tenantInfo'] }); // <-- important
+    },
+  });
+
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white shadow-sm">
       <table className="min-w-full border-collapse text-sm">
@@ -29,15 +56,23 @@ export function ClientsTable({ clients }: { clients: ClientType[] }) {
                   Edit
                 </Link>
                 <button
-                  disabled
-                  className="cursor-not-allowed text-gray-400"
-                  title="Delete (disabled for now)"
+                  className="text-red-600 hover:text-red-700 font-medium disabled:opacity-60"
+                  onClick={() => del.mutate(c.id)}
+                  disabled={del.isPending}
+                  title="Delete"
                 >
-                  Delete
+                  {del.isPending ? 'Deleting…' : 'Delete'}
                 </button>
               </td>
             </tr>
           ))}
+          {clients.length === 0 && (
+            <tr>
+              <td colSpan={3} className="px-6 py-6 text-gray-600">
+                No clients yet.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

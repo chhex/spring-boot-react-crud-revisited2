@@ -2,7 +2,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {type RenderOptions, render as rtlRender} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type {PropsWithChildren, ReactElement} from 'react'
-import {BrowserRouter} from 'react-router'
+import {BrowserRouter} from 'react-router-dom'
 
 export const queryClient = new QueryClient({
 	defaultOptions: {

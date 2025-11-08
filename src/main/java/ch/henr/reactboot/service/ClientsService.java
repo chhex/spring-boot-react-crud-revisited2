@@ -23,15 +23,7 @@ public class ClientsService {
 
     @Transactional(readOnly = true)
     public List<Client> list() {
-        var tenant = TenantHolder.get();
-        var clients = repo.findAllByTenant(tenant);
-        if (clients.size() == 0) {
-            repo.saveAllAndFlush(List.of(new Client(null, "First Example Client", "first@example.com", tenant),
-                    new Client(null, "Second Example Client", "second@example.com", tenant)));
-            clients = repo.findAllByTenant(tenant);
-
-        }
-        return clients;
+        return repo.findAllByTenant(TenantHolder.get());
     }
 
     @Transactional(readOnly = true)

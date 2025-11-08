@@ -1,8 +1,8 @@
 import { getTenantInfo} from '@/api/tenantInfo'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 export function TenantBadge() {
- const { data } = useSuspenseQuery({
+ const { data } = useQuery({
 		queryFn: getTenantInfo,
 		queryKey: ['tenantInfo']
 	})
@@ -10,7 +10,7 @@ export function TenantBadge() {
   return (
     <span className="text-xs text-gray-500">
       Workspace: <span className="font-mono">{data.tenantDisplay}</span>
-      {typeof data.clientCount === 'number' && <> · {data.clientCount} clients</>}
+      {typeof data.clientCount === 'number' && <> · {data?.clientCount ?? 0} clients</>}
     </span>
   )
-}
+} 

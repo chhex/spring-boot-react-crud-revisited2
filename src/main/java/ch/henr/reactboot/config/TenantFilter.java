@@ -11,6 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import ch.henr.reactboot.db.TenantRepository;
 import ch.henr.reactboot.entity.Tenant;
+import ch.henr.reactboot.service.DemoSeedService;
 import ch.henr.reactboot.support.TenantHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,9 +23,11 @@ import jakarta.servlet.http.HttpSession;
 public class TenantFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(TenantFilter.class);
     private final TenantRepository tenants;
+    private final DemoSeedService demoSeed; // inject (present only in
 
-    public TenantFilter(TenantRepository tenants) {
+    public TenantFilter(TenantRepository tenants, DemoSeedService demoSeed) {
         this.tenants = tenants;
+        this.demoSeed = demoSeed;
     }
 
     @Override
@@ -49,6 +52,9 @@ public class TenantFilter extends OncePerRequestFilter {
                 tenants.save(tenant);
             }
             TenantHolder.set(tenant);
+            if (created && demoSeed != null) {
+                demoSeed.seedOnce(tenant);
+            }
             MDC.put("tenant", tenant.getToken());
             MDC.put("path", path);
             log.debug("Tenant resolved{}: token={}, id={}",
