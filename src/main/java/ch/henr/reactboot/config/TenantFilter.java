@@ -25,6 +25,11 @@ public class TenantFilter extends OncePerRequestFilter {
     private final TenantRepository tenants;
     private final DemoSeedService demoSeed; // inject (present only in
 
+    public TenantFilter(TenantRepository tenants) {
+        this.tenants = tenants;
+        this.demoSeed = null;
+    }
+
     public TenantFilter(TenantRepository tenants, DemoSeedService demoSeed) {
         this.tenants = tenants;
         this.demoSeed = demoSeed;
