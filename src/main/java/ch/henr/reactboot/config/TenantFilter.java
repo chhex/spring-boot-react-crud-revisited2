@@ -25,6 +25,11 @@ public class TenantFilter extends OncePerRequestFilter {
     private final TenantRepository tenants;
     private final DemoSeedService demoSeed; // inject (present only in
 
+    public TenantFilter() {
+        this.tenants = null;
+        this.demoSeed = null;
+    }
+
     public TenantFilter(TenantRepository tenants) {
         this.tenants = tenants;
         this.demoSeed = null;
@@ -34,6 +39,8 @@ public class TenantFilter extends OncePerRequestFilter {
         this.tenants = tenants;
         this.demoSeed = demoSeed;
     }
+
+    
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
