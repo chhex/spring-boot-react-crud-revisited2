@@ -2,16 +2,60 @@ package ch.henr.reactboot.service;
 
 import java.util.List;
 
-import ch.henr.reactboot.model.Client;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface ClientsService {
+import ch.henr.reactboot.db.ClientsRepository;
+import ch.henr.reactboot.dto.ClientUpsertDto;
+import ch.henr.reactboot.entity.Client;
+import ch.henr.reactboot.mapper.ClientMapper;
+import ch.henr.reactboot.support.TenantHolder;
 
-    List<Client> list();
+@Service
+public class ClientsService {
+    private final ClientsRepository repo;
+    private final ClientMapper mapper;
 
-    Client findById(Long id);
+    public ClientsService(ClientsRepository repo, ClientMapper mapper) {
+        this.repo = repo;
+        this.mapper = mapper;
+    }
 
-    Client save(Client client);
+    @Transactional(readOnly = true)
+    public List<Client> list() {
+        var tenant = TenantHolder.get();
+        var clients = repo.findAllByTenant(tenant);
+        if (clients.size() == 0) {
+            repo.saveAllAndFlush(List.of(new Client(null, "First Example Client", "first@example.com", tenant),
+                    new Client(null, "Second Example Client", "second@example.com", tenant)));
+            clients = repo.findAllByTenant(tenant);
 
-    Void delete(Long id);
+        }
+        return clients;
+    }
 
+    @Transactional(readOnly = true)
+    public Client get(Long id) {
+        return repo.findByTenantAndId(TenantHolder.get(), id).orElseThrow();
+    }
+
+    @Transactional
+    public Client create(ClientUpsertDto in) {
+        var c = new Client();
+        mapper.updateEntityFromDto(in, c);
+        c.setTenant(TenantHolder.get());
+        return repo.save(c);
+    }
+
+    @Transactional
+    public Client update(Long id, ClientUpsertDto in) {
+        var c = repo.findByTenantAndId(TenantHolder.get(), id).orElseThrow();
+        mapper.updateEntityFromDto(in, c);
+        return c;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        repo.findByTenantAndId(TenantHolder.get(), id).ifPresent(repo::delete);
+    }
 }

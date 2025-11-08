@@ -31,6 +31,5 @@ FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
 COPY --from=build /app/target/*-SNAPSHOT.jar /app/app.jar
 EXPOSE 8080
-ENV SPRING_PROFILES_ACTIVE=demo
 USER nonroot:nonroot
 ENTRYPOINT ["java","-jar","/app/app.jar"]

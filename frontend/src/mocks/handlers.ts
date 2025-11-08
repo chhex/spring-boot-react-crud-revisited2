@@ -3,16 +3,15 @@ import clients from './data/clients.json' with {type: 'json'}
 
 
 export const handlers = [
-	http.get('/clients', async () => {
+	http.get('/api/clients', async () => {
 		await delay('real')
 		return HttpResponse.json(clients)
 	}),
-	http.get('/tenantInfo', async () => {
+	http.get('/api/tenantInfo', async () => {
     await delay('real')
     return HttpResponse.json({
       tenantDisplay: getMockTenantDisplay(),
-      createdAt: new Date().toISOString(),
-      clientCount: 3 // or compute from your mock clients.json length
+      clientCount: 3 // or compute from more mock clients.json length
     })
   })
 ]

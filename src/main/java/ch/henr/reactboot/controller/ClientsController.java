@@ -1,11 +1,9 @@
 package ch.henr.reactboot.controller;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,59 +11,52 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.henr.reactboot.model.Client;
+import ch.henr.reactboot.dto.ClientDto;
+import ch.henr.reactboot.dto.ClientUpsertDto;
+import ch.henr.reactboot.mapper.ClientMapper;
 import ch.henr.reactboot.service.ClientsService;
 
 @RestController
-@RequestMapping(value = "/clients")
+@RequestMapping(value="/api/clients", produces="application/json")
 public class ClientsController {
+  
+  private final ClientsService service;
+  private final ClientMapper mapper; 
 
-    @Autowired
-    private ClientsService clientsService;
+  public ClientsController(ClientsService service, ClientMapper mapper) {
+    this.service = service;
+    this.mapper = mapper;
+}
 
-    public ClientsController(ClientsService clientsService) {
-        this.clientsService = clientsService;
-    }
+  @GetMapping
+  public List<ClientDto> list() {
+    return service.list().stream().map(mapper::toDto).toList();
+  }
 
-    @GetMapping
-    public List<Client> getClients() {
-        var clients = clientsService.list();
-        if (clients.isEmpty()) {
-            clientsService.save(new Client(null, "First Example Client", "first@example.com", null));
-            clientsService.save(new Client(null, "Second Example Client", "second@example.com", null));
-            clients = clientsService.list();
-        }
+  @GetMapping("/{id}")
+  public ClientDto get(@PathVariable Long id) {
+    return mapper.toDto(service.get(id));
+  }
 
-        return clients;
-    }
+  @PostMapping(consumes="application/json")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ClientDto create(@RequestBody ClientUpsertDto in) {
+    var entity = service.create(in);  // see below
+    return mapper.toDto(entity);
+  }
 
-    @GetMapping("/{id}")
-    public Client getClient(@PathVariable Long id) {
-        var client = clientsService.findById(id);
-        return client;
-    }
+  @PutMapping(value="/{id}", consumes="application/json")
+  public ClientDto update(@PathVariable Long id, @RequestBody ClientUpsertDto in) {
+    var entity = service.update(id, in);
+    return mapper.toDto(entity);
+  }
 
-    @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) throws URISyntaxException {
-        Client savedClient = clientsService.save(client);
-        return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        Client currentClient = clientsService.findById(id);
-        currentClient.setName(client.getName());
-        currentClient.setEmail(client.getEmail());
-        currentClient = clientsService.save(currentClient);
-
-        return ResponseEntity.ok(currentClient);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
-        clientsService.delete(id);
-        return ResponseEntity.ok().build();
-    }
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable Long id) {
+    service.delete(id);
+  }
 }

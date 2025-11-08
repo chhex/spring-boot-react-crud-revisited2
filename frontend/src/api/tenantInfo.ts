@@ -7,7 +7,7 @@ const TenantInfo = v.object({
 export type TenantInfo = v.InferOutput<typeof TenantInfo>
 
 export async function getTenantInfo() {
-	const res = await fetch('/tenantInfo', { credentials: 'include' })
+	const res = await fetch('/api/tenantInfo', { credentials: 'include' })
 	if (!res.ok) throw new Error(`Tenant load failed: ${res.status}`)
 	return v.parse(TenantInfo, await res.json())
 }

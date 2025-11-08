@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
     /**
      * Dev server
      * - If USE_MOCK=true → no proxy (api served from mocks)
-     * - If USE_MOCK=false → proxy /clients to Spring Boot (:8080 by default)
+     * - If USE_MOCK=false → proxy to Spring Boot (:8080 by default)
      */
     server: {
       port: 5173,
@@ -30,11 +30,11 @@ export default defineConfig(({ mode }) => {
         ? {}
         : {
             proxy: {
-              '/clients': {
+              '/api/clients': {
                 target: BACKEND_URL,
                 changeOrigin: true,
               },
-              '/tenantInfo': {
+              '/api/tenantInfo': {
                 target: BACKEND_URL,
                 changeOrigin: true,
               },
