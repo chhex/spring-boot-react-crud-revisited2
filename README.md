@@ -76,18 +76,18 @@ This opens to the Frontend port <http://localhost:5173> only and takes it's data
 
 ##### 1️⃣ Frontend API Layer (`src/api/clients.ts`)
 
-- [ ] Implement all CRUD calls aligned with Spring Boot endpoints:
-- [ ] Include `credentials: 'include'` for session support
+- [x] Implement all CRUD calls aligned with Spring Boot endpoints:
+- [x] Include `credentials: 'include'` for session support
 
 ##### 2️⃣ React Query Integration
 
-- [ ] Add CUD (Create , Update , Delete) Actions
+- [x] Add CUD (Create , Update , Delete) Actions
 
 ##### 3️⃣ Backend (Spring Boot)
 
 - [ ] Validate payloads
 - [x] Tenant scoping already active via Hibernate filter
-- [ ] Extend `ClientRepository` with `deleteByTenantId()`
+- [x] Extend `ClientRepository` with `deleteByTenantId()`
 
 ##### 4️⃣ Forms & Validation
 
@@ -101,9 +101,9 @@ This opens to the Frontend port <http://localhost:5173> only and takes it's data
 - [x] Use **Spring Session JDBC**
 - [x] Store `TENANT_ID` in session (`anon:<sessionId>` or username)
 - [x] Enable `tenantFilter` for all Hibernate sessions
-- [ ] On session timeout: delete rows by tenant id
-- [ ] On logout (if added): wipe tenant’s rows
-- [ ] Optional janitor job for stale tenants
+- [x] On session timeout: delete rows by tenant id
+- [x] On logout (if added): wipe tenant’s rows
+- [x] Optional janitor job for stale tenants
 
 ##### 7️⃣ Build & Deployment
 
@@ -127,7 +127,7 @@ This opens to the Frontend port <http://localhost:5173> only and takes it's data
 - [ ] Pagination & search
 - [ ] Toast notifications for CRUD actions
 - [ ] Login / per-user tenants
-- [ ] Automated cleanup job (`@Scheduled`)
+- [x] Automated cleanup job (`@Scheduled`)
 - [ ] E2E tests (Playwright)
 - [ ] Modern component refactor (Hooks + Context)
-- [ ] Deploy live demo
+- [x] Deploy live demo
