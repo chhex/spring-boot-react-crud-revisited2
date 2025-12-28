@@ -31,7 +31,29 @@ reactboot/               # Maven Spring Boot backend
 └── frontend/            # React app (npm)
 ```
 
-## Dev setup
+## App Preconditions
+
+Clone the application:
+
+```bash
+git clone https://github.com/chhex/spring-boot-react-crud-revisited2
+```
+
+### Backend
+
+Needs Java 21 installed, see also [jEnv](https://www.jenv.be) for manageing different Java Versions.
+
+### Frontend
+
+[pnpm](https://pnpm.io) needs to be installed. For Installation see <https://pnpm.io/installation>
+
+When cloned, run
+
+```bash
+pnpm install 
+```
+
+## Running the Application
 
 ### Single Artifact
 
