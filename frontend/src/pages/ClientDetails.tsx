@@ -10,7 +10,7 @@ function initials(name: string) {
   return ((p[0]?.[0] ?? '') + (p[1]?.[0] ?? '')).toUpperCase();
 }
 
-export function Details() {
+export function ClientDetails() {
   const {id} = useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -23,6 +23,7 @@ export function Details() {
     queryFn: () => getClient(clientId),
     enabled: !badId,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 
   // local editable state

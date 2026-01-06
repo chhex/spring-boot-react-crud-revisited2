@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createClient } from '@/api/clients';
 import { PageLayout } from '@/components/PageLayout';
+import type { TenantInfo } from '@/api/tenantInfo';
 
 export function NewClient() {
   const navigate = useNavigate();
@@ -13,11 +14,13 @@ export function NewClient() {
   const [email, setEmail] = useState('');
   const [err, setErr] = useState<string | null>(null);
 
+  type NewClientInput = { name: string; email: string };
+
   const mut = useMutation({
-    mutationFn: () => createClient({ name, email }),
-    // optional: Badge sofort +1 anzeigen
+    mutationFn: (input: NewClientInput) => createClient(input),
     onMutate: async () => {
-      const prevTenant = qc.getQueryData<any>(['tenantInfo']);
+      await qc.cancelQueries({ queryKey: ['tenantInfo'] });
+      const prevTenant = qc.getQueryData<TenantInfo>(['tenantInfo']);
       if (prevTenant) {
         qc.setQueryData(['tenantInfo'], {
           ...prevTenant,
@@ -26,8 +29,8 @@ export function NewClient() {
       }
       return { prevTenant };
     },
-    onError: (e: any, _vars, ctx) => {
-      setErr(e?.message ?? 'Create failed');
+    onError: (e: unknown, _vars, ctx) => {
+      setErr(e instanceof Error ? e.message : 'Create failed');
       if (ctx?.prevTenant) qc.setQueryData(['tenantInfo'], ctx.prevTenant);
     },
     onSuccess: () => {
@@ -40,7 +43,7 @@ export function NewClient() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
-    mut.mutate();
+    mut.mutate({ name, email });
   };
 
   return (
@@ -66,7 +69,7 @@ export function NewClient() {
             <input
               id="name"
               name="name"
-              placeholder="Ada Lovelace"
+              placeholder="Chris Example"
               className="w-full rounded border border-gray-300 px-3 py-2 text-gray-900"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -84,7 +87,7 @@ export function NewClient() {
               id="email"
               name="email"
               type="email"
-              placeholder="ada@math.io"
+              placeholder="chris@example.com"
               className="w-full rounded border border-gray-300 px-3 py-2 text-gray-900"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
