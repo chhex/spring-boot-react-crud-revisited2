@@ -1,8 +1,9 @@
 // src/components/ClientsTable.tsx
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteClient, type Client as ClientType } from '@/api/clients';
-import { useState } from 'react';
+import type { TenantInfo } from '@/api/tenantInfo';
 
 
 export function ClientsTable({ clients }: { clients: ClientType[] }) {
@@ -20,7 +21,7 @@ export function ClientsTable({ clients }: { clients: ClientType[] }) {
       // optimistic remove
       qc.setQueryData<ClientType[]>(['clients'], (old = []) => old.filter(c => c.id !== id));
       // optimistic tenantInfo-- (optional, see next block)
-      const prevTenant = qc.getQueryData<any>(['tenantInfo']);
+      const prevTenant = qc.getQueryData<TenantInfo>(['tenantInfo']);
       if (prevTenant) {
         qc.setQueryData(['tenantInfo'], { ...prevTenant, clientCount: Math.max(0, (prevTenant.clientCount ?? 0) - 1) });
       }
@@ -60,14 +61,14 @@ export function ClientsTable({ clients }: { clients: ClientType[] }) {
                 <td className="border-b border-gray-200 px-6 py-3 text-right">
                   <Link
                     to={`${c.id}`}
-                    className="text-indigo-600 hover:text-indigo-900 font-medium mr-4"
-                  >
+                    aria-disabled={isThisDeleting}
+                    className={`font-medium mr-4 ${isThisDeleting ? 'pointer-events-none opacity-50' : 'text-indigo-600 hover:text-indigo-900'}`}                  >
                     Edit
                   </Link>
                   <button
                     className="text-red-600 hover:text-red-700 font-medium disabled:opacity-60"
                     onClick={() => del.mutate(c.id)}
-                    disabled={del.isPending}
+                    disabled={isThisDeleting}
                     title="Delete"
                   >
                     {isThisDeleting ? 'Deleting…' : 'Delete'}

@@ -1,9 +1,12 @@
 // src/pages/Details.tsx
-import {useEffect, useMemo, useState} from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import {Navigate, useNavigate, useParams} from 'react-router-dom';
-import {getClient, updateClient} from '@/api/clients';
-import {PageLayout} from '@/components/PageLayout';
+import { useEffect, useMemo, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { getClient, updateClient } from '@/api/clients';
+import { PageLayout } from '@/components/PageLayout';
+
+const AVATAR_COLORS = ['bg-indigo-600', 'bg-emerald-600', 'bg-rose-600', 'bg-amber-600', 'bg-sky-600', 'bg-violet-600'];
+type UpdateClientInput = { name: string; email: string };
 
 function initials(name: string) {
   const p = name.trim().split(/\s+/);
@@ -11,14 +14,15 @@ function initials(name: string) {
 }
 
 export function ClientDetails() {
-  const {id} = useParams();
+
+  const { id } = useParams();
   const navigate = useNavigate();
   const qc = useQueryClient();
 
   const clientId = Number(id);
-  const badId = !Number.isFinite(clientId);
+  const badId = !Number.isFinite(clientId) || clientId <= 0;
 
-  const {data: client, isLoading, isError} = useQuery({
+  const { data: client, isLoading, isError } = useQuery({
     queryKey: ['client', clientId],
     queryFn: () => getClient(clientId),
     enabled: !badId,
@@ -30,14 +34,16 @@ export function ClientDetails() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [err, setErr] = useState<string | null>(null);
+  const [initialized, setInitialized] = useState(false);
 
   // sync state when client arrives
   useEffect(() => {
-    if (client) {
+    if (client && !initialized) {
       setName(client.name ?? '');
       setEmail(client.email ?? '');
+      setInitialized(true);
     }
-  }, [client]);
+  }, [client, initialized]);
 
   const unchanged = useMemo(
     () => !!client && name === (client.name ?? '') && email === (client.email ?? ''),
@@ -45,27 +51,26 @@ export function ClientDetails() {
   );
 
   const mut = useMutation({
-    mutationFn: () => updateClient(clientId, {name, email}),
-    onError: (e: any) => setErr(e?.message ?? 'Update failed'),
+    mutationFn: (input: UpdateClientInput) => updateClient(clientId, input),
+    onError: (e: unknown) => setErr(e instanceof Error ? e.message : 'Update failed'),
     onSuccess: () => {
-      qc.invalidateQueries({queryKey: ['clients']});
-      qc.invalidateQueries({queryKey: ['client', clientId]});
-      navigate('/clients', {replace: true});
+      qc.invalidateQueries({ queryKey: ['clients'] });
+      qc.invalidateQueries({ queryKey: ['client', clientId] });
+      navigate('/clients', { replace: true });
     },
   });
 
-  if (badId) return <Navigate to="/" replace />;
+  if (badId) return <Navigate to="/clients" replace />;
   if (isLoading) return <PageLayout title="Loading…"><p>Loading…</p></PageLayout>;
-  if (isError || !client) return <Navigate to="/" replace />;
+  if (isError || !client) return <Navigate to="/clients" replace />;
 
   // avatar color
-  const colors = ['bg-indigo-600','bg-emerald-600','bg-rose-600','bg-amber-600','bg-sky-600','bg-violet-600'];
-  const color = colors[(client.name.length + clientId) % colors.length];
+  const color = AVATAR_COLORS[(client.name.length + clientId) % AVATAR_COLORS.length];
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
-    mut.mutate();
+    mut.mutate({ name, email });
   };
 
   return (

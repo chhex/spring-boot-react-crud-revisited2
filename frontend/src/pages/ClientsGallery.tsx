@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { PageLayout } from '@/components/PageLayout';
 import { LoadingOrError } from '@/components/LoadingOrError';
 
-export function Gallery() {
+export function ClientsGallery() {
   const { data = [], isLoading, isError } = useQuery({
     queryKey: ['clients'],
     queryFn: getClients,

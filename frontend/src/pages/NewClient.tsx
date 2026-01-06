@@ -6,6 +6,8 @@ import { createClient } from '@/api/clients';
 import { PageLayout } from '@/components/PageLayout';
 import type { TenantInfo } from '@/api/tenantInfo';
 
+type NewClientInput = { name: string; email: string };
+
 export function NewClient() {
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -13,8 +15,6 @@ export function NewClient() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [err, setErr] = useState<string | null>(null);
-
-  type NewClientInput = { name: string; email: string };
 
   const mut = useMutation({
     mutationFn: (input: NewClientInput) => createClient(input),
