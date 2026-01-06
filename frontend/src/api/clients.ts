@@ -11,7 +11,7 @@ const ClientsSchema = v.array(ClientSchema);
 
 const ClientUpsertSchema = v.object({
   name: v.string(),
-  email: v.string(), // optionally: v.email()
+  email: v.pipe(v.string(), v.email()),
 });
 export type ClientUpsert = v.InferOutput<typeof ClientUpsertSchema>;
 
@@ -24,12 +24,34 @@ async function requestJson<TSchema extends v.GenericSchema>(
 ): Promise<v.InferOutput<TSchema>> {
   const r = await fetch(input, { credentials: 'include', ...init });
 
-  if (r.status === 409) throw new Error('Email already exists');
-  if (!r.ok) throw new Error(`Request failed (${r.status})`);
+  if (!r.ok) {
+    let message = `Request failed (${r.status})`;
+
+    // Try to extract ProblemDetail detail/title from JSON
+    try {
+      const err: any = await r.json();
+      if (typeof err?.detail === 'string' && err.detail.trim()) {
+        message = err.detail;
+      } else if (typeof err?.title === 'string' && err.title.trim()) {
+        message = err.title;
+      }
+    } catch {
+      // If it's not JSON, try plain text (sometimes useful)
+      try {
+        const text = await r.text();
+        if (text.trim()) message = text;
+      } catch {
+        // ignore
+      }
+    }
+
+    throw new Error(message);
+  }
 
   const data: unknown = await r.json();
   return v.parse(schema, data);
 }
+
 
 export function getClients() {
   return requestJson(ClientsSchema, `${API}/clients`);

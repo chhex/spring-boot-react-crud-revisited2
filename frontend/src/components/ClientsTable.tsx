@@ -34,7 +34,7 @@ export function ClientsTable({ clients }: { clients: ClientType[] }) {
     onSettled: () => {
       setDeletingId(null);
       qc.invalidateQueries({ queryKey: ['clients'] });
-      qc.invalidateQueries({ queryKey: ['tenantInfo'] }); // <-- important
+      qc.invalidateQueries({ queryKey: ['tenantInfo'] }); 
     },
   });
 

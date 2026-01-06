@@ -18,6 +18,7 @@ import ch.henr.reactboot.dto.ClientDto;
 import ch.henr.reactboot.dto.ClientUpsertDto;
 import ch.henr.reactboot.mapper.ClientMapper;
 import ch.henr.reactboot.service.ClientsService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value="/api/clients", produces="application/json")
@@ -43,7 +44,7 @@ public class ClientsController {
 
   @PostMapping(consumes="application/json")
   @ResponseStatus(HttpStatus.CREATED)
-  public ClientDto create(@RequestBody ClientUpsertDto in) {
+  public ClientDto create(@Valid @RequestBody ClientUpsertDto in) {
     var entity = service.create(in);  // see below
     return mapper.toDto(entity);
   }
