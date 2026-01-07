@@ -107,16 +107,16 @@ This opens to the Frontend port <http://localhost:5173> only and takes it's data
 
 ##### 3️⃣ Backend (Spring Boot)
 
-- [ ] Validate payloads
+- [x] Validate payloads
 - [x] Tenant scoping already active via Hibernate filter
 - [x] Extend `ClientRepository` with `deleteByTenantId()`
 
 ##### 4️⃣ Forms & Validation
 
 - [ ] Convert forms to controlled inputs or use `react-hook-form`
-- [ ] Add simple client-side checks (e.g. name required, valid email)
+- [x] Add simple client-side checks (e.g. name required, valid email)
 - [ ] Later integrate Valibot/Zod with `@hookform/resolvers`
-- [ ] Provide visual feedback (e.g. Tailwind form styling)
+- [x] Provide visual feedback (e.g. Tailwind form styling)
 
 ##### 6️⃣ Session & Tenant Management
 
